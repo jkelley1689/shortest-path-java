@@ -1,0 +1,51 @@
+package shortestpath;
+//==============================================================================
+//   Shortest Path Program
+//==============================================================================
+//   Justin Kelley
+//
+//   5/14/2017
+//------------------------------------------------
+
+
+public class ShortestPath {
+    public static void main(String[] args) {
+        System.out.println("Positive Weight Graph using Dijkstra's Algorithm to find shortest path");
+        Graph dijkstra = new Graph();
+        dijkstra.addEdge(0, 'B', 1);
+        dijkstra.addEdge(0, 'E', 4);
+        dijkstra.addEdge(0, 'F', 8);
+        dijkstra.addEdge(1, 'C', 2);
+        dijkstra.addEdge(1, 'F', 6);
+        dijkstra.addEdge(1, 'G', 6);
+        dijkstra.addEdge(2, 'D', 1);
+        dijkstra.addEdge(2, 'G', 2);
+        dijkstra.addEdge(3, 'G', 1);
+        dijkstra.addEdge(3, 'H', 4);
+        dijkstra.addEdge(4, 'F', 5);
+        dijkstra.addEdge(6, 'F', 1);
+        dijkstra.addEdge(6, 'H', 1);
+        dijkstra.printGraph();
+        dijkstra.Dijkstra();
+        
+        System.out.println();
+        
+        System.out.println("Negative Weight Graph using Bellman-Ford Algorithm to find shortest path");
+        Graph bellmanFord = new Graph();
+        bellmanFord.addEdge(0, 'B', -1);
+        bellmanFord.addEdge(0, 'E', 4);
+        bellmanFord.addEdge(0, 'F', 8);
+        bellmanFord.addEdge(1, 'C', -2);
+        bellmanFord.addEdge(1, 'F', 6);
+        bellmanFord.addEdge(1, 'G', 6);
+        bellmanFord.addEdge(2, 'D', 1);
+        bellmanFord.addEdge(2, 'G', 2);
+        bellmanFord.addEdge(3, 'G', 1);
+        bellmanFord.addEdge(3, 'H', 4);
+        bellmanFord.addEdge(4, 'F', 5);
+        bellmanFord.addEdge(6, 'F', 1);
+        bellmanFord.addEdge(6, 'H', -1);
+        bellmanFord.printGraph();;
+        bellmanFord.BellmanFord(); 
+    }  
+}
