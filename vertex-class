@@ -1,0 +1,31 @@
+public class Vertex {
+    private char data;
+    private Edge edge;
+    private Vertex next;
+    
+    
+    public Vertex(char data,Edge edge,Vertex next){
+        this.data = data;
+        this.edge = null;
+    }
+    
+    public char getData(){
+        return data;
+    }
+    public void setData(char data){
+        this.data = data;
+    }
+    public Vertex getNext(){
+        return next;
+    }
+    public void setNext(Vertex next){
+        this.next = next;
+    }
+    public void setEdge(char v,int w){
+        edge = new Edge(v,w);
+    }
+    public Edge getEdge(){
+        return edge;
+    }
+    
+}
