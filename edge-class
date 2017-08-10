@@ -1,0 +1,49 @@
+package shortestpath;
+
+
+public class Edge {
+    private char v;
+    private int w;
+    private Edge next;
+    
+    public Edge(char v,int w){
+        this.v = v;
+        this.w = w; 
+        next = null;
+    }
+    
+    public Edge getNext(){
+        return next;
+    }
+    public void setNext(Edge next){
+        this.next = next;
+    }
+    public char getV(){
+        return v;
+    }
+    public int getW(){
+        return w;
+    }
+    public int getIndex(){
+        if(v == 'A')
+            return 0;
+        else if(v == 'B')
+            return 1;
+        else if(v == 'C')
+            return 2;
+        else if(v == 'D')
+            return 3;
+        else if(v == 'E')
+            return 4;
+        else if(v == 'F')
+            return 5;
+        else if(v == 'G')
+            return 6;
+        else
+            return 7;
+    }
+    
+    
+    
+    
+}
