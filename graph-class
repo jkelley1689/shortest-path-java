@@ -1,0 +1,203 @@
+package shortestpath;
+
+import java.util.*;
+
+
+public class Graph {
+    
+    Vertex adj[] = new Vertex[8];
+    char[] alpha = "ABCDEFGH".toCharArray();
+    Edge temp;
+    
+    //This section of code has functions for creating the graph and utilities to use on the graph
+    //##########################################################################
+    public Graph(){ //Creates a graph of vertexs' with null edges
+        for(int i = 0;i<adj.length;i++){
+            adj[i] = new Vertex(alpha[i],null,null);
+        }
+        
+    }
+
+    
+    public void addEdge(int u, char v,int w){ //adds edges and weights to the graph
+        if(adj[u].getEdge() == null){
+            adj[u].setEdge(v,w); 
+        }
+        else{
+            temp = adj[u].getEdge();
+            while(temp.getNext() != null){
+                temp = temp.getNext();
+            }
+            temp.setNext(new Edge(v,w));          
+        }
+    }
+    
+    public void printGraph(){ //prints the weight graph with edges and weights
+        for(int i = 0;i<adj.length;i++){
+            if(adj[i].getEdge() == null)
+                System.out.println(adj[i].getData() + "-->  {no edges}" );
+            else{
+                System.out.print(adj[i].getData() + " --> ");
+                temp = adj[i].getEdge();
+                while(temp.getNext() != null){
+                    System.out.print("{" + temp.getV() + "," + temp.getW() + "}");
+                    temp = temp.getNext();
+                }
+                System.out.print("{" + temp.getV() + "," + temp.getW() + "}");
+                System.out.println();
+            
+            }
+        }
+    }
+    public int[] initalizeGraph(int[] dist){ //initalizes the dist to each vertex from source to INF
+        for(int i = 0;i<dist.length;i++){
+            dist[i] = Integer.MAX_VALUE;
+        }
+        return dist;
+    }
+    
+    public void printDist(Vertex adj[],int[] dist,int[] prev){ //prints the distance and path from the souce node to every other node in the graph
+        for(int i = 0;i < dist.length;i++){
+            ArrayList path = new ArrayList();
+            if(dist[i] >= 0){
+                System.out.println("Shortest distance from " + adj[0].getData() + " to " + adj[i].getData() + " = " + dist[i]);
+                int x = i;
+                while(x!=0){
+                    path.add(0, adj[x].getData());
+                    x = prev[x];
+                }
+                path.add(0,adj[0].getData());
+                System.out.println(path);
+                }
+            else
+                System.out.println("Distance from " + adj[0].getData() + " to " + adj[i].getData() +  " =   no solution,negative weight found");
+        }
+    }
+    //##########################################################################
+    //End graph functions
+    
+    
+    //This section of code is all functions for performing Dijkstra's algorithm on the Adj Graph
+    //******************************************************************************************
+    public void Dijkstra(){ 
+        int[] dist = new int[adj.length];
+        int[] prev = new int[adj.length];
+        boolean[] S = new boolean[adj.length];
+        int src = 0;
+        Queue<Edge> Q = new LinkedList();
+      
+        dist = initalizeGraph(dist);
+        dist[src] = 0;
+        relax(dist,S,adj,prev,Q);
+        
+        System.out.println();
+        printDist(adj,dist,prev);   
+    }
+    
+    public void relax(int[] dist,boolean[] S,Vertex[] adj,int[] prev,Queue<Edge> Q){
+        for(int i = 0;i <dist.length;i++){
+            int u = extractMin(dist,S);
+            S[u] = true;
+            if(adj[u].getEdge() != null)
+                temp = adj[u].getEdge();
+            
+            while(temp.getNext()!=null){
+               Q.add(temp);
+               temp = temp.getNext();
+            }
+            Q.add(temp);
+            while(!Q.isEmpty()){
+                Edge e = Q.remove();
+                int v = e.getIndex();
+                int d = dist[u] + e.getW();
+                if(dist[v] > d){
+                    dist[v] = d;
+                    prev[v] = u;
+                }
+            }
+                
+        }
+    }
+    
+    public int extractMin(int[] dist,boolean[] S){
+        int min = Integer.MAX_VALUE;
+        int min_index = -1;
+        for(int v = 0;v < dist.length;v++){
+            if(S[v] == false && dist[v] <= min){
+                min = dist[v];
+                min_index = v;
+            }
+        }
+        return min_index;      
+        }
+    //**************************************************************************
+    //End Dijkstra's fucntions
+    
+    
+    //This section of code is all functions for perfoming Bellman-Ford's Algorithm on an Adj Graph
+    //--------------------------------------------------------------------------
+    public void BellmanFord(){
+        int[] dist = new int[adj.length];
+        int[] prev = new int[adj.length];
+        boolean[] S = new boolean[adj.length];
+        Queue<Edge> Q = new LinkedList();
+       
+        dist = initalizeGraph(dist);
+        dist[0] = 0;
+        
+        for(int i = 1;i <adj.length-1;i++){
+            relaxBellman(dist,prev,Q,adj);
+        }
+        if(checkNegCycle(dist,Q,adj))
+             printDist(adj,dist,prev);
+        else{
+            System.out.println();
+            System.out.println("No solution,negative weight cycle found");          
+        }
+        printDist(adj,dist,prev);
+    }
+    
+    public void relaxBellman(int[] dist,int[] prev,Queue<Edge> Q,Vertex[] adj){
+        for(int u = 0;u < adj.length;u++){
+                if(adj[u].getEdge() != null)
+                    temp = adj[u].getEdge();
+            
+                while(temp.getNext()!=null){
+                    Q.add(temp);
+                    temp = temp.getNext();
+                    }
+                Q.add(temp);
+                while(!Q.isEmpty()){
+                    Edge e = Q.remove();
+                    int v = e.getIndex();
+                    int d = dist[u] + e.getW();
+                    if(dist[v] > d){
+                        dist[v] = d;
+                        prev[v] = u;
+                    }
+                }
+            }
+    }
+    public boolean checkNegCycle(int[] dist,Queue<Edge> Q,Vertex[] adj){
+        for(int u = 0;u < adj.length;u++){   
+                if(adj[u].getEdge() != null)
+                    temp = adj[u].getEdge();
+            
+                while(temp.getNext()!=null){
+                    Q.add(temp);
+                    temp = temp.getNext();
+                    }
+                Q.add(temp);
+                while(!Q.isEmpty()){
+                    Edge e = Q.remove();
+                    int v = e.getIndex();
+                    int d = dist[u] + e.getW();
+                    if(dist[v] > d)
+                        return false;
+            }
+            }
+        return true;
+    }
+}
+//------------------------------------------------------------------------------
+//End Bellman-Ford Functions
